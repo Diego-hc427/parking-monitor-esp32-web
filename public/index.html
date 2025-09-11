@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Parqueo | Monitor en tiempo real</title>
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <style>
+    .pulse-dot {
+      width: 10px; height: 10px; border-radius: 9999px;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.7; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.7; }
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-50 min-h-screen">
+  <div class="max-w-5xl mx-auto p-6">
+    <header class="flex items-center justify-between">
+      <h1 class="text-2xl md:text-3xl font-bold tracking-tight">🚗 Parqueo — Monitor en tiempo real</h1>
+      <div class="flex items-center gap-2">
+        <span id="conn-dot" class="pulse-dot bg-red-500 inline-block"></span>
+        <span id="conn-text" class="text-sm text-slate-300">Desconectado</span>
+      </div>
+    </header>
+
+    <section class="mt-6 grid md:grid-cols-2 gap-6">
+      <div class="bg-slate-900/60 backdrop-blur rounded-2xl p-5 ring-1 ring-slate-800 shadow-lg">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-semibold">Espacio A1</h2>
+            <p class="text-slate-400 text-sm">JSN‑SR04T · ESP32</p>
+          </div>
+          <span id="badge" class="px-3 py-1 rounded-full text-sm bg-slate-800 ring-1 ring-slate-700">—</span>
+        </div>
+
+        <div class="mt-6 grid grid-cols-3 gap-4">
+          <div class="col-span-2 bg-slate-800 rounded-xl p-4 text-center ring-1 ring-slate-700">
+            <p class="text-xs uppercase text-slate-400 tracking-wide">Distancia</p>
+            <p id="distance" class="text-4xl font-bold mt-1">—</p>
+            <p id="threshold" class="text-xs text-slate-400 mt-1">Umbral: — cm</p>
+          </div>
+          <div class="bg-slate-800 rounded-xl p-4 text-center ring-1 ring-slate-700">
+            <p class="text-xs uppercase text-slate-400 tracking-wide">Estado</p>
+            <p id="state" class="text-2xl font-bold mt-1">—</p>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <div class="bg-slate-800 rounded-xl p-4 ring-1 ring-slate-700">
+            <p class="text-xs uppercase text-slate-400 tracking-wide">Última actualización</p>
+            <p id="updated" class="text-sm mt-1">—</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-5 ring-1 ring-slate-800 shadow-lg">
+        <h3 class="text-lg font-semibold">Cómo funciona</h3>
+        <ol class="mt-3 space-y-2 text-slate-300 text-sm list-decimal list-inside">
+          <li>El ESP32 mide la distancia con el sensor JSN‑SR04T (promedio de lecturas).</li>
+          <li>Envía <code>distance_cm</code> por HTTP a <code>/api/reading</code> con su <code>token</code>.</li>
+          <li>El servidor calcula <em>Ocupado</em> si la distancia ≤ umbral.</li>
+          <li>La interfaz se actualiza en tiempo real vía Socket.IO.</li>
+        </ol>
+        <div class="mt-4 text-xs text-slate-400">
+          Consejo: ajusta el <strong>THRESHOLD_CM</strong> en <code>.env</code> según tu altura de montaje.
+        </div>
+      </div>
+    </section>
+
+    <footer class="mt-8 text-slate-400 text-xs">
+      Node.js + Express + Socket.IO · Hecho para ESP32 + JSN‑SR04T
+    </footer>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

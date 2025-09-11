@@ -1,0 +1,18 @@
+# dependencias
+node_modules/
+npm-debug.log*
+yarn.lock
+pnpm-lock.yaml
+
+# entorno / secretos
+.env
+*.local
+
+# logs
+logs/
+*.log
+*.log.*
+
+# sistema
+.DS_Store
+Thumbs.db
