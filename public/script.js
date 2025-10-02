@@ -33,7 +33,7 @@ function renderCard({ spotId, distance_cm, updatedAt }) {
   const d = (distance_cm != null) ? Number(distance_cm) : NaN;
   const ocupado = !isNaN(d) && d <= THRESHOLD_CM;
 
-  elState.textContent = isNaN(d) ? '—' : (ocupado ? 'OCCUP' : 'LIBRE');
+  elState.textContent = isNaN(d) ? '—' : (ocupado ? 'OCUPADO' : 'LIBRE');
   elDistance.textContent = isNaN(d) ? '—' : `${d.toFixed(1)} cm`;
   if (elThreshold) elThreshold.textContent = `Umbral: ${THRESHOLD_CM} cm`;
   if (elUpdated)   elUpdated.textContent   = updatedAt ? new Date(updatedAt).toLocaleString() : new Date().toLocaleTimeString();
