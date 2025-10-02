@@ -22,48 +22,69 @@
 <body class="bg-slate-950 text-slate-50 min-h-screen">
   <div class="max-w-5xl mx-auto p-6">
     <header class="flex items-center justify-between">
-      <h1 class="text-2xl md:text-3xl font-bold tracking-tight">🚗 Parqueo — Monitor en tiempo real</h1>
-      <div class="flex items-center gap-2">
-        <span id="conn-dot" class="pulse-dot bg-red-500 inline-block"></span>
-        <span id="conn-text" class="text-sm text-slate-300">Desconectado</span>
-      </div>
-    </header>
-
-    <section class="mt-6 grid md:grid-cols-2 gap-6">
+            <!-- TARJETAS A1 y A2 -->
       <div class="bg-slate-900/60 backdrop-blur rounded-2xl p-5 ring-1 ring-slate-800 shadow-lg">
-  <div class="flex items-center justify-between">
-    <div>
-      <h2 class="text-lg font-semibold">Espacio A1</h2>
-      <p class="text-slate-400 text-sm">JSN-SR04T · ESP32</p>
-    </div>
-    <span id="badge" class="px-3 py-1 rounded-full text-sm bg-slate-800 ring-1 ring-slate-700">—</span>
-  </div>
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-semibold">Espacio A1</h2>
+            <p class="text-slate-400 text-sm">JSN-SR04T · ESP32</p>
+          </div>
+          <span id="badge" class="px-3 py-1 rounded-full text-sm bg-slate-800 ring-1 ring-slate-700">—</span>
+        </div>
 
-  <!-- Nuevo layout: IZQUIERDA = ESTADO (grande) / DERECHA = DISTANCIA + UMBRAL -->
-  <div class="mt-6 grid grid-cols-2 gap-4">
-    <!-- Izquierda: ESTADO en grande -->
-    <div class="bg-slate-800 rounded-xl p-6 text-center ring-1 ring-slate-700 flex items-center justify-center">
-      <div>
-        <p class="text-xs uppercase text-slate-400 tracking-wide">Estado</p>
-        <p id="state" class="text-5xl font-extrabold mt-1">—</p>
+        <div class="mt-6 grid grid-cols-2 gap-4">
+          <div class="bg-slate-800 rounded-xl p-6 text-center ring-1 ring-slate-700 flex items-center justify-center">
+            <div>
+              <p class="text-xs uppercase text-slate-400 tracking-wide">Estado</p>
+              <p id="state" class="text-5xl font-extrabold mt-1">—</p>
+            </div>
+          </div>
+          <div class="bg-slate-800 rounded-xl p-6 ring-1 ring-slate-700">
+            <p class="text-xs uppercase text-slate-400 tracking-wide">Distancia</p>
+            <p id="distance" class="text-4xl font-bold mt-1">—</p>
+            <p id="threshold" class="text-xs text-slate-400 mt-2">Umbral: — cm</p>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <div class="bg-slate-800 rounded-xl p-4 ring-1 ring-slate-700">
+            <p class="text-xs uppercase text-slate-400 tracking-wide">Última actualización</p>
+            <p id="updated" class="text-sm mt-1">—</p>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- Derecha: Distancia + Umbral -->
-    <div class="bg-slate-800 rounded-xl p-6 ring-1 ring-slate-700">
-      <p class="text-xs uppercase text-slate-400 tracking-wide">Distancia</p>
-      <p id="distance" class="text-4xl font-bold mt-1">—</p>
-      <p id="threshold" class="text-xs text-slate-400 mt-2">Umbral: — cm</p>
-    </div>
-  </div>
+      <!-- NUEVA TARJETA: A2 -->
+      <div class="bg-slate-900/60 backdrop-blur rounded-2xl p-5 ring-1 ring-slate-800 shadow-lg">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-semibold">Espacio A2</h2>
+            <p class="text-slate-400 text-sm">JSN-SR04T · ESP32</p>
+          </div>
+          <span id="badgeA2" class="px-3 py-1 rounded-full text-sm bg-slate-800 ring-1 ring-slate-700">—</span>
+        </div>
 
-  <div class="mt-6">
-    <div class="bg-slate-800 rounded-xl p-4 ring-1 ring-slate-700">
-      <p class="text-xs uppercase text-slate-400 tracking-wide">Última actualización</p>
-      <p id="updated" class="text-sm mt-1">—</p>
-    </div>
-  </div>
-</div>
+        <div class="mt-6 grid grid-cols-2 gap-4">
+          <div class="bg-slate-800 rounded-xl p-6 text-center ring-1 ring-slate-700 flex items-center justify-center">
+            <div>
+              <p class="text-xs uppercase text-slate-400 tracking-wide">Estado</p>
+              <p id="stateA2" class="text-5xl font-extrabold mt-1">—</p>
+            </div>
+          </div>
+          <div class="bg-slate-800 rounded-xl p-6 ring-1 ring-slate-700">
+            <p class="text-xs uppercase text-slate-400 tracking-wide">Distancia</p>
+            <p id="distanceA2" class="text-4xl font-bold mt-1">—</p>
+            <p id="thresholdA2" class="text-xs text-slate-400 mt-2">Umbral: — cm</p>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <div class="bg-slate-800 rounded-xl p-4 ring-1 ring-slate-700">
+            <p class="text-xs uppercase text-slate-400 tracking-wide">Última actualización</p>
+            <p id="updatedA2" class="text-sm mt-1">—</p>
+          </div>
+        </div>
+      </div>
 
 
       <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-5 ring-1 ring-slate-800 shadow-lg">
