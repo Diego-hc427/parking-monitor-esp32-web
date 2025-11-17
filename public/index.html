@@ -4,12 +4,17 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Parqueo | Monitor en tiempo real</title>
+
   <!-- Tailwind via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+
   <style>
     .pulse-dot {
-      width: 10px; height: 10px; border-radius: 9999px;
+      width: 10px;
+      height: 10px;
+      border-radius: 9999px;
       animation: pulse 1.5s infinite;
     }
     @keyframes pulse {
@@ -19,6 +24,7 @@
     }
   </style>
 </head>
+
 <body class="bg-slate-950 text-slate-50 min-h-screen">
   <div class="max-w-5xl mx-auto p-6">
     
@@ -33,7 +39,7 @@
 
     <!-- TARJETAS DE ESTADO -->
     <section class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-      
+
       <!-- TARJETA A1 -->
       <div class="bg-slate-900/60 backdrop-blur rounded-2xl p-5 ring-1 ring-slate-800 shadow-lg">
         <div class="flex items-center justify-between">
@@ -51,6 +57,7 @@
               <p id="state" class="text-3xl md:text-4xl font-extrabold mt-1 leading-none break-words">—</p>
             </div>
           </div>
+
           <div class="bg-slate-800 rounded-xl p-6 ring-1 ring-slate-700">
             <p class="text-xs uppercase text-slate-400 tracking-wide">Distancia</p>
             <p id="distance" class="text-4xl font-bold mt-1">—</p>
@@ -83,6 +90,7 @@
               <p id="stateA2" class="text-3xl md:text-4xl font-extrabold mt-1 leading-none break-words">—</p>
             </div>
           </div>
+
           <div class="bg-slate-800 rounded-xl p-6 ring-1 ring-slate-700">
             <p class="text-xs uppercase text-slate-400 tracking-wide">Distancia</p>
             <p id="distanceA2" class="text-4xl font-bold mt-1">—</p>
@@ -98,14 +106,47 @@
         </div>
       </div>
 
+      <!-- TARJETA A3 -->
+      <div class="bg-slate-900/60 backdrop-blur rounded-2xl p-5 ring-1 ring-slate-800 shadow-lg">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-semibold">Espacio A3</h2>
+            <p class="text-slate-400 text-sm">JSN-SR04T · ESP32</p>
+          </div>
+          <span id="badgeA3" class="px-3 py-1 rounded-full text-sm bg-slate-800 ring-1 ring-slate-700">—</span>
+        </div>
+
+        <div class="mt-6 grid grid-cols-2 gap-4">
+          <div class="bg-slate-800 rounded-xl p-6 text-center ring-1 ring-slate-700 flex items-center justify-center overflow-hidden">
+            <div>
+              <p class="text-xs uppercase text-slate-400 tracking-wide">Estado</p>
+              <p id="stateA3" class="text-3xl md:text-4xl font-extrabold mt-1 leading-none break-words">—</p>
+            </div>
+          </div>
+
+          <div class="bg-slate-800 rounded-xl p-6 ring-1 ring-slate-700">
+            <p class="text-xs uppercase text-slate-400 tracking-wide">Distancia</p>
+            <p id="distanceA3" class="text-4xl font-bold mt-1">—</p>
+            <p id="thresholdA3" class="text-xs text-slate-400 mt-2">Umbral: — cm</p>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <div class="bg-slate-800 rounded-xl p-4 ring-1 ring-slate-700">
+            <p class="text-xs uppercase text-slate-400 tracking-wide">Última actualización</p>
+            <p id="updatedA3" class="text-sm mt-1">—</p>
+          </div>
+        </div>
+      </div>
+
       <!-- BLOQUE "CÓMO FUNCIONA" -->
       <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-5 ring-1 ring-slate-800 shadow-lg md:col-span-2">
         <h3 class="text-lg font-semibold">Cómo funciona</h3>
         <ol class="mt-3 space-y-2 text-slate-300 text-sm list-decimal list-inside">
-          <li>El ESP32 mide la distancia con el sensor JSN-SR04T (promedio de lecturas).</li>
-          <li>Envía <code>distance_cm</code> por HTTP a <code>/api/reading</code> con su <code>token</code>.</li>
-          <li>El servidor calcula <em>Ocupado</em> si la distancia ≤ umbral.</li>
-          <li>La interfaz se actualiza en tiempo real vía Socket.IO.</li>
+          <li>El ESP32 mide la distancia con el sensor JSN-SR04T (previo filtrado).</li>
+          <li>Envía <code>distance_cm</code> por HTTP a <code>/api/reading</code> con su <code>spot_id</code>.</li>
+          <li>El servidor determina si está ocupado según el umbral.</li>
+          <li>El estado se actualiza en tiempo real con Socket.IO.</li>
         </ol>
         <div class="mt-4 text-xs text-slate-400">
           Consejo: ajusta el <strong>THRESHOLD_CM</strong> en <code>.env</code> según tu altura de montaje.
@@ -117,6 +158,7 @@
     <footer class="mt-8 text-slate-400 text-xs">
       Node.js + Express + Socket.IO · Hecho para ESP32 + JSN-SR04T
     </footer>
+
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
