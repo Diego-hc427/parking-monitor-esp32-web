@@ -1,6 +1,3 @@
-// === Config ===
-const THRESHOLD_CM = 50; // mismo umbral que en tu ESP32
-
 // === Helpers UI ===
 
 // Cambia el estado del indicador de conexión
@@ -23,21 +20,18 @@ function resolveIds(spotId) {
 }
 
 // Pinta una tarjeta por spot (A1/A2/A3)
-function pintar(spotId, distance, ts) {
+function pintar(spotId, distance, ocupado, ts) {
   const { sufijo } = resolveIds(spotId);
 
   const badge = document.getElementById('badge' + sufijo);
   const state = document.getElementById('state' + sufijo);
   const dist  = document.getElementById('distance' + sufijo);
-  const thr   = document.getElementById('threshold' + sufijo);
   const upd   = document.getElementById('updated' + sufijo);
 
   const d = distance == null ? NaN : Number(distance);
-  const ocupado = !isNaN(d) && d <= THRESHOLD_CM;
 
-  if (state) state.textContent = isNaN(d) ? '—' : (ocupado ? 'OCUPADO' : 'LIBRE');
+  if (state) state.textContent = ocupado ? 'OCUPADO' : 'LIBRE';
   if (dist)  dist.textContent  = isNaN(d) ? '—' : `${d.toFixed(1)} cm`;
-  if (thr)   thr.textContent   = `Umbral: ${THRESHOLD_CM} cm`;
 
   if (upd) {
     const date = ts ? new Date(ts) : new Date();
@@ -68,25 +62,24 @@ try {
     setConn(false);
   });
 
-  // Mensajes directos del servidor:
-  // { spot_id: 'A1'|'A2'|'A3', distance_cm: xx.x, updated_at: ... }
+  // Mensajes directos del servidor
   socket.on('reading', (msg) => {
     if (!msg) return;
+
     const spot = msg.spot_id;
     const dist = msg.distance_cm;
+    const occ  = msg.occupied;  // <---- USANDO occupied DEL SERVIDOR
     const ts   = msg.updated_at || msg.updatedAt || Date.now();
 
     if (spot === 'A1' || spot === 'A2' || spot === 'A3') {
-      pintar(spot, dist, ts);
+      pintar(spot, dist, occ, ts);
     }
   });
 
   // Bootstrap inicial
-  socket.on('bootstrap', ({ spots, threshold_cm }) => {
-    if (threshold_cm) THRESHOLD_CM = threshold_cm;
-
+  socket.on('bootstrap', ({ spots }) => {
     Object.values(spots).forEach((item) => {
-      pintar(item.spot_id, item.distance_cm, item.updated_at);
+      pintar(item.spot_id, item.distance_cm, item.occupied, item.updated_at);
     });
   });
 
@@ -103,16 +96,16 @@ async function fetchStatus() {
 }
 
 async function poll() {
-  if (socketOK) return; // si socket funciona, no hacemos polling
+  if (socketOK) return;
   try {
     const data = await fetchStatus();
 
     if (data.spots) {
       const spots = data.spots;
 
-      if (spots.A1) pintar('A1', spots.A1.distance_cm, spots.A1.updated_at);
-      if (spots.A2) pintar('A2', spots.A2.distance_cm, spots.A2.updated_at);
-      if (spots.A3) pintar('A3', spots.A3.distance_cm, spots.A3.updated_at);
+      if (spots.A1) pintar('A1', spots.A1.distance_cm, spots.A1.occupied, spots.A1.updated_at);
+      if (spots.A2) pintar('A2', spots.A2.distance_cm, spots.A2.occupied, spots.A2.updated_at);
+      if (spots.A3) pintar('A3', spots.A3.distance_cm, spots.A3.occupied, spots.A3.updated_at);
     }
 
     setConn(true);
