@@ -41,24 +41,42 @@ app.get('/api/state', (req, res) => {
 app.post('/api/reading', (req, res) => {
   try {
     const { token, distance_cm, spot_id } = req.body || {};
+
     if (token !== API_KEY) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
+
     const d = Number(distance_cm);
     if (!Number.isFinite(d)) {
       return res.status(400).json({ error: 'distance_cm must be a number' });
     }
+
     const id = String(spot_id || 'A1');
-    const occupied = d <= THRESHOLD_CM;
+
+    // ================================================
+    // UMBRAL ESPECIAL SOLO PARA SENSOR A3
+    // ================================================
+    let occupied;
+
+    if (id === 'A3') {
+      occupied = d <= 23; // EXACTO IGUAL A TU ESP32
+    } else {
+      occupied = d <= THRESHOLD_CM; // TODOS LOS DEMÁS USAN 50 CM
+    }
+    // ================================================
+
     const payload = {
       spot_id: id,
       distance_cm: d,
       occupied,
       updated_at: new Date().toISOString()
     };
+
     latest[id] = payload;
     io.emit('reading', payload);
+
     res.json({ ok: true, ...payload });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
@@ -67,8 +85,10 @@ app.post('/api/reading', (req, res) => {
 
 io.on('connection', (socket) => {
   console.log('Client connected', socket.id);
+
   // Send current state right away
   socket.emit('bootstrap', { spots: latest, threshold_cm: THRESHOLD_CM });
+
   socket.on('disconnect', () => {
     console.log('Client disconnected', socket.id);
   });
